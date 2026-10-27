@@ -1,0 +1,30 @@
+<?php
+// 【えれサイト運用部】Discord自動通知プログラム
+
+// 1."https://discord.com/api/webhooks/1564543939615395932/jR3vq996-Ld9YxPvPs3-mUWXeF9MvlPccHrSVGAgh6CQztEc4F6cny0xhlp8UBH7IBZZ"
+
+
+// 2. えれサイトに投稿されたデータを自動で受け取る設定
+$hensei   = isset($_POST['hensei']) ? $_POST['hensei'] : 'X編成';
+$ressha   = isset($_POST['ressha']) ? $_POST['ressha'] : '9999A';
+$unyou    = isset($_POST['unyou'])  ? $_POST['unyou']  : 'A1';
+
+// 3. Discordに送る文章を作る
+$message = "【えれサイト目撃情報】\n" . $hensei . " が目撃されました！\n■列車番号：" . $ressha . "\n■運用：" . $unyou;
+
+// 4. 送信する設定
+$data = array("content" => $message);
+$options = array(
+    'http' => array(
+        'method'  => 'POST',
+        'header'  => 'Content-type: application/json',
+        'content' => json_encode($data)
+    )
+);
+
+// 5. 実行する
+$context  = stream_context_create($options);
+$result = file_get_contents($webhook_url, false, $context);
+
+echo "Discordへの自動通知処理が完了しました。";
+?>
